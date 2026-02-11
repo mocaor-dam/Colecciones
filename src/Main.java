@@ -25,5 +25,19 @@ public class Main {
 
         }
 
+
+        //Prueba en casa 1
+        Collection<Integer> p = new ArrayList<>();
+        p.add(10);
+        p.add(20);
+        p.add(30);
+
+
+        System.out.println(p.size());
+
+
+
+
+
     }
 }
