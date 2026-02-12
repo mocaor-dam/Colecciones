@@ -8,54 +8,54 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Equipo {
+public class Equipo<T> {
     private String nombre;
 
-    private Set<Alumno> alumnos;
+    private Set<T> alumnos;
+
 
     public Equipo(String nombre) {
         this.nombre = nombre;
         alumnos = new HashSet<>();
     }
 
-    public Equipo(Set<Alumno> alumnos, String nombre) {
+    public Equipo(Set<T> alumnos, String nombre) {
         this.alumnos = alumnos;
         this.nombre = nombre;
     }
 
-    public void addAlumno(Alumno alumno) throws AlumnoException {
+    public void addAlumno(T alumno) throws AlumnoException {
         if (!alumnos.add(alumno)){
             throw new AlumnoException("Ese alumno ya esta en la coleccion");
         }
     }
 
-    public void borrarAlumno(Alumno alumno) throws AlumnoException {
+    public void borrarAlumno(T alumno) throws AlumnoException {
         if (!alumnos.remove(alumno)){
             throw new AlumnoException("El alumno no esta en la lista");
         }
     }
 
-    public Alumno buscarAlumno(Alumno a){
+    public T buscarAlumno(T a){
         if (!alumnos.contains(a)){
             return null;
         }
         return a;
     }
 
-    public List<Alumno> devolverListaAlumnos(){
+    public List<T> devolverListaAlumnos(){
         return new ArrayList<>(alumnos);
     }
 
-    public Equipo unirEquipos(Equipo a){
-        Set<Alumno> union = new HashSet<>();
-        union.addAll(this.alumnos);
-        union.addAll(a.alumnos);
-        return new Equipo("UnionFC");
+    public Equipo<T> unirEquipos(Equipo<T> otroEquipo){
+        Set<T> union = new HashSet<>(this.alumnos);
+        union.addAll(otroEquipo.alumnos);
+        return new Equipo(union,"Union de " + this.nombre + " y " + otroEquipo.nombre);
     }
 
 
-    public Equipo interseccionEquipos(String nombreEquipos, Equipo equipo2){
-        Set<Alumno> nuevaLista = new HashSet<>(alumnos);
+    public Equipo<T> interseccionEquipos(String nombreEquipos, Equipo<T> equipo2){
+        Set<T> nuevaLista = new HashSet<>(alumnos);
         nuevaLista.retainAll(equipo2.alumnos);
         return new Equipo(nuevaLista,nombreEquipos);
     }
