@@ -50,14 +50,14 @@ public class Equipo<T> {
     public Equipo<T> unirEquipos(Equipo<T> otroEquipo){
         Set<T> union = new HashSet<>(this.alumnos);
         union.addAll(otroEquipo.alumnos);
-        return new Equipo(union,"Union de " + this.nombre + " y " + otroEquipo.nombre);
+        return new Equipo<>(union,"Union de " + this.nombre + " y " + otroEquipo.nombre);
     }
 
 
     public Equipo<T> interseccionEquipos(String nombreEquipos, Equipo<T> equipo2){
-        Set<T> nuevaLista = new HashSet<>(alumnos);
+        Set<T> nuevaLista = new HashSet<>(this.alumnos);
         nuevaLista.retainAll(equipo2.alumnos);
-        return new Equipo(nuevaLista,nombreEquipos);
+        return new Equipo<>(nuevaLista,nombreEquipos);
     }
 
 
