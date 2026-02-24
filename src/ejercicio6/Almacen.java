@@ -10,7 +10,16 @@ public class Almacen {
 
     public Almacen() {
          cajas = new ArrayList<>(MAX_CAJAS);
+         crearCajas();
     }
+
+    public void crearCajas(){
+        for (int i = 0; i < MAX_CAJAS; i++) {
+            Caja caja = new Caja();
+            cajas.add(caja);
+        }
+    }
+
 
     static void main(String[] args) {
 

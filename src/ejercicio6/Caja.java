@@ -25,8 +25,16 @@ public class Caja {
         clientes.add(cliente);
     }
 
+    public void abrirCaja() throws SupermercadoException {
+        if (estaAbierta){
+            throw new SupermercadoException("La caja ya esta abierta");
+        } else {
+            estaAbierta = true;
+        }
+    }
+
     public void cerrarCaja() throws SupermercadoException{
-        if (!estaAbierta || clientes != null){
+        if (!estaAbierta || !clientes.isEmpty()){
             throw new SupermercadoException("No se puede cerrar esta caja");
         } else {
             estaAbierta = false;
