@@ -7,4 +7,8 @@ public class Cliente {
     public Cliente() {
         this.NUM_CLIENTE = contador++;
     }
+
+    public int getNUM_CLIENTE() {
+        return NUM_CLIENTE;
+    }
 }

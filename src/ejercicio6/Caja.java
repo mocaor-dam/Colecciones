@@ -2,21 +2,18 @@ package ejercicio6;
 
 import exceptions.SupermercadoException;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
-public class Caja {
+public class Caja implements Comparable<Caja> {
 
-    private final int NUMERO_CAJAS;
+    private final int NUMERO_DE_CAJA;
     private static int contador = 1;
     private boolean estaAbierta;
 
     Queue<Cliente> clientes;
 
     public Caja() {
-        this.NUMERO_CAJAS = contador++;
+        this.NUMERO_DE_CAJA = contador++;
         this.estaAbierta = false;
         this.clientes = new ArrayDeque<>();
     }
@@ -41,4 +38,35 @@ public class Caja {
         }
     }
 
+    public void atenderCliente() throws SupermercadoException {
+        if (estaAbierta || clientes.isEmpty()){
+            clientes.remove();
+        } else {
+            throw new SupermercadoException("No se puede atender al cliente");
+        }
+    }
+
+    public int comprobarNumeroClientes(){
+         return clientes.size();
+    }
+
+    public boolean isEstaAbierta() {
+        return estaAbierta;
+    }
+
+    public void setEstaAbierta(boolean estaAbierta) {
+        this.estaAbierta = estaAbierta;
+    }
+
+    public int getNUMERO_DE_CAJA() {
+        return NUMERO_DE_CAJA;
+    }
+
+    @Override
+    public int compareTo(Caja o) {
+        if (comprobarNumeroClientes() == o.comprobarNumeroClientes()){
+            return NUMERO_DE_CAJA - o.NUMERO_DE_CAJA;
+        }
+        return comprobarNumeroClientes() - o.comprobarNumeroClientes();
+    }
 }
