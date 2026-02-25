@@ -98,6 +98,9 @@ public class Almacen {
                 case 4 -> {
                     almacen.atenderCliente();
                 }
+                case 5 -> {
+                    break;
+                }
             }
 
 

@@ -106,7 +106,7 @@ public abstract class Persona {
             sb.append("Mensaje ").append(contador++).append(": ")
                     .append("De: ").append(m.getRemitente().getNombre())
                     .append(" Texto: ").append(m.getTexto())
-                    .append(" Fecha y hora: ").append(m.getFechaFormateada())
+                    .append(" Fecha y hora: ")
                     .append("\n");
         }
         return sb.toString();
