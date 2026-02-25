@@ -38,12 +38,13 @@ public class Caja implements Comparable<Caja> {
         }
     }
 
-    public void atenderCliente() throws SupermercadoException {
-        if (estaAbierta || clientes.isEmpty()){
-            clientes.remove();
-        } else {
-            throw new SupermercadoException("No se puede atender al cliente");
+    public Cliente atenderCliente() throws SupermercadoException {
+        if (!estaAbierta) {
+            throw new SupermercadoException("La caja esta cerrada");
+        } else if (clientes.isEmpty()) {
+            throw new SupermercadoException("No hay clientes en la caja");
         }
+        return clientes.poll();
     }
 
     public int comprobarNumeroClientes(){

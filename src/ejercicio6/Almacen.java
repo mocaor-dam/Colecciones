@@ -52,13 +52,13 @@ public class Almacen {
         System.out.println("El cliente numero " + cliente.getNUM_CLIENTE() + " se ha ido a la caja " + c.getNUMERO_DE_CAJA());
     }
 
-    public void atenderCliente(){
-        try {
-            int numeroDeCajaElegida = MiEntradaSalida.leerEnteroRango("Que caja quieres atender",1,cajas.size())-1;
-            cajas.get(numeroDeCajaElegida).atenderCliente();
-        } catch (SupermercadoException | MiEntradaSalidaException e) {
-            System.out.println(e.getMessage());
-        }
+    public void atenderCliente() throws MiEntradaSalidaException, SupermercadoException {
+
+        int numeroDeCajaElegida = MiEntradaSalida.leerEnteroRango("Que caja quieres atender", 1, cajas.size()) - 1;
+        Cliente clienteAtendido = cajas.get(numeroDeCajaElegida).atenderCliente();
+
+        System.out.println("Se ha atendido al cliente con numero " + clienteAtendido.getNUM_CLIENTE());
+
     }
 
 
@@ -73,39 +73,41 @@ public class Almacen {
         System.out.println("==================================");
         System.out.println("    Bienvenido al Supermercado");
         System.out.println("==================================");
-        System.out.println("Elige una de estas opciones: ");
-        System.out.println("1. Abrir caja");
-        System.out.println("2. Cerrar caja");
-        System.out.println("3. Nuevo cliente");
-        System.out.println("4. Atender cliente");
-        System.out.println("5. Salir");
+
+        do {
+            try {
 
 
-        try {
-            opcion = MiEntradaSalida.leerEnteroRango("Que quieres hacer", 1, 5);
+                System.out.println("Elige una de estas opciones: ");
+                System.out.println("1. Abrir caja");
+                System.out.println("2. Cerrar caja");
+                System.out.println("3. Nuevo cliente");
+                System.out.println("4. Atender cliente");
+                System.out.println("5. Salir");
 
+                opcion = MiEntradaSalida.leerEnteroRango("Que quieres hacer: ", 1, 5);
 
-            switch (opcion) {
-                case 1 -> {
-                    almacen.abrirCaja();
+                switch (opcion) {
+                    case 1 -> {
+                        almacen.abrirCaja();
+                    }
+                    case 2 -> {
+                        almacen.cerrarCaja();
+                    }
+                    case 3 -> {
+                        almacen.nuevoCliente();
+                    }
+                    case 4 -> {
+                        almacen.atenderCliente();
+                    }
+                    case 5 -> {
+                        break;
+                    }
                 }
-                case 2 -> {
-                    almacen.cerrarCaja();
-                }
-                case 3 -> {
-                    almacen.nuevoCliente();
-                }
-                case 4 -> {
-                    almacen.atenderCliente();
-                }
-                case 5 -> {
-                    break;
-                }
+
+            } catch (MiEntradaSalidaException | SupermercadoException e) {
+                System.out.println(e.getMessage());
             }
-
-
-        } catch (MiEntradaSalidaException | SupermercadoException e) {
-            System.out.println(e.getMessage());
-        }
+        } while (opcion != 5);
     }
 }
