@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Recetario {
 
-    Map<Receta, Receta> recetario;
+    private Map<Receta, Receta> recetario;
 
     public Recetario() {
         recetario = new HashMap<>();
