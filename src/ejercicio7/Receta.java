@@ -2,10 +2,7 @@ package ejercicio7;
 
 import exceptions.RecetaException;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Receta {
     private String nombre;
@@ -22,7 +19,8 @@ public class Receta {
     }
 
     public boolean necesitaIngrediente(String nombreIngrediente) {
-
+        Ingrediente ingredienteBuscado = new Ingrediente(nombreIngrediente, 0);
+        return ingredientes.contains(ingredienteBuscado);
     }
 
     public void addIngrediente(Ingrediente ingredienteNuevo) {
@@ -36,7 +34,18 @@ public class Receta {
     }
 
     public void borrarIngrediente(Ingrediente ingrediente) throws RecetaException {
+        if (!ingredientes.remove(ingrediente)){
+            throw new RecetaException("El ingrediente no se encuentra en la receta");
+        }
 
+        Iterator<String> iterator = pasos.iterator();
+        while (iterator.hasNext()){
+            String paso = iterator.next();
+            if (paso.contains(ingrediente.getNombre())){
+                iterator.remove();
+            }
+
+        }
     }
 
     public void addPaso(String paso){
@@ -52,5 +61,35 @@ public class Receta {
         }
     }
 
+    public String getNombre() {
+        return nombre;
+    }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getTiempoPreparacion() {
+        return tiempoPreparacion;
+    }
+
+    public void setTiempoPreparacion(int tiempoPreparacion) {
+        this.tiempoPreparacion = tiempoPreparacion;
+    }
+
+    public Set<Ingrediente> getIngredientes() {
+        return ingredientes;
+    }
+
+    public void setIngredientes(Set<Ingrediente> ingredientes) {
+        this.ingredientes = ingredientes;
+    }
+
+    public List<String> getPasos() {
+        return pasos;
+    }
+
+    public void setPasos(List<String> pasos) {
+        this.pasos = pasos;
+    }
 }
