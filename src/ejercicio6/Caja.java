@@ -18,8 +18,12 @@ public class Caja implements Comparable<Caja> {
         this.clientes = new ArrayDeque<>();
     }
 
-    public void anadirCliente(Cliente cliente){
-        clientes.add(cliente);
+    public void anadirCliente(Cliente cliente) throws SupermercadoException {
+        if (estaAbierta){
+            clientes.add(cliente);
+        } else {
+            throw new SupermercadoException("No esta abierta la caja");
+        }
     }
 
     public void abrirCaja() throws SupermercadoException {

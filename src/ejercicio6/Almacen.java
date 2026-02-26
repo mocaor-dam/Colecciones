@@ -45,9 +45,8 @@ public class Almacen {
 
 
     public void nuevoCliente() throws SupermercadoException {
-        Cliente cliente = new Cliente();
-
         Caja c = cajas.stream().filter(Caja::isEstaAbierta).min(Caja::compareTo).orElseThrow(() -> new SupermercadoException("No hay cajas abiertas"));
+        Cliente cliente = new Cliente();
         c.anadirCliente(cliente);
         System.out.println("El cliente numero " + cliente.getNUM_CLIENTE() + " se ha ido a la caja " + c.getNUMERO_DE_CAJA());
     }
