@@ -1,11 +1,13 @@
 package ExamenColecciones2022;
 
 public class Jugador extends Cromo {
+    private String nombreJugador;
     private String equipo;
     private double altura;
 
-    public Jugador(String identificador, String nombre, String equipo, double altura) {
+    public Jugador(String identificador, String nombre,String nombreJugador, String equipo, double altura) {
         super(identificador, nombre);
+        this.nombreJugador = nombreJugador;
         this.equipo = equipo;
         this.altura = altura;
     }
