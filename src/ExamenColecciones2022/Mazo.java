@@ -52,31 +52,31 @@ public class Mazo {
     }
 
 
-    public double calcularAlturaMedia(String equipoDeseado) {
+    public double calcularAlturaMedia(String equipoDeseado) throws MazoException {
 
         return mazo.keySet().stream()
-                                    .filter(c2 -> c2 instanceof Jugador)
-                                    .map(c2 -> (Jugador) c2)
-                                    .filter(jugador -> jugador.getEquipo().equalsIgnoreCase(equipoDeseado))
-                                    .mapToDouble(Jugador::getAltura).average().orElse(Double.NaN);
+                .filter(c2 -> c2 instanceof Jugador)
+                .map(c2 -> (Jugador) c2)
+                .filter(jugador -> jugador.getEquipo().equalsIgnoreCase(equipoDeseado))
+                .mapToDouble(Jugador::getAltura).average().orElseThrow(() -> new MazoException("No se puede calcular la media"));
     }
 
     public List<Cromo> devolverOrdenados() {
         return mazo.keySet().stream()
                 .sorted((c1, c2) -> {
-                   if (c1 instanceof Escudo && c2 instanceof Jugador){
+                    if (c1 instanceof Escudo && c2 instanceof Jugador) {
                         return -1;
-                   }
-                   if (c1 instanceof Jugador && c2 instanceof Escudo){
-                       return 1;
-                   }
+                    }
+                    if (c1 instanceof Jugador && c2 instanceof Escudo) {
+                        return 1;
+                    }
 
-                    String nombre1 = (c1 instanceof Escudo) ? ((Escudo) c1).getNombre() : ((Jugador) c1).getNombreJugador();
-                    String nombre2 = (c2 instanceof Escudo) ? ((Escudo) c2).getNombre() : ((Jugador) c2).getNombreJugador();
 
-                    return nombre1.compareToIgnoreCase(nombre2);
+                    return c1.getNombre().compareToIgnoreCase(c2.getNombre());
                 }).toList();
     }
+
+
 
     public Map<Cromo, Integer> getMazo() {
         return mazo;
