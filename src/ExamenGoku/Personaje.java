@@ -13,11 +13,11 @@ public class Personaje {
     private int vidaMax;
     private int kiActual;
     private int kiMax;
-
+    private boolean muerto;
 
     Set<Ataque> ataques;
 
-    public Personaje(String nombre, TRaza raza, int vidaActual, int vidaMax, int kiActual, int kiMax) throws DBException {
+    public Personaje(String nombre, TRaza raza, int vidaActual, int vidaMax, int kiActual, int kiMax, boolean muerto) throws DBException {
         this.nombre = nombre;
         this.raza = raza;
         setKiActual(kiActual);
@@ -25,6 +25,8 @@ public class Personaje {
         setVidaActual(vidaActual);
         setVidaMax(vidaMax);
         ataques = new HashSet<>();
+        this.muerto = false;
+
     }
 
 
@@ -95,6 +97,19 @@ public class Personaje {
         return ataques;
     }
 
+
+    public boolean isMuerto() {
+        return muerto;
+    }
+
+    public void setMuerto(boolean muerto) {
+        this.muerto = muerto;
+    }
+
+    public void setAtaques(Set<Ataque> ataques) {
+        this.ataques = ataques;
+    }
+
     public void addAtaque(Ataque ataque) throws DBException {
         if (!ataques.add(ataque)){
             throw new DBException("No se ha podido añadir el ataque");
@@ -111,5 +126,19 @@ public class Personaje {
     @Override
     public int hashCode() {
         return Objects.hash(nombre, raza);
+    }
+
+    public void recibirDaño(int cantidad){
+        this.vidaActual -= cantidad;
+        if (this.vidaActual < 0) {
+            this.vidaActual = 0;
+        }
+    }
+
+    public void consumirKi(int cantidad){
+        this.kiActual -= cantidad;
+        if (this.kiActual < 0){
+            this.kiActual = 0;
+        }
     }
 }

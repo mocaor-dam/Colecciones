@@ -2,10 +2,8 @@ package ExamenGoku;
 
 import exceptions.DBException;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 
 public class Juego {
 
@@ -146,31 +144,95 @@ public class Juego {
     }
 
 
-    private void personajeConAtaqueMasPoderoso() {
+
+    public void personajeConMasAtaques() throws DBException {
+        int numMaxAtaques = personajes.stream()
+                .mapToInt(p -> p.getAtaques().size())
+                .max()
+                .orElseThrow(() -> new DBException("No hay personajes"));
+        personajes.stream()
+                .filter(p -> p.getAtaques().size() == numMaxAtaques)
+                .forEach(p -> System.out.println(p.getNombre() + " conoce " + numMaxAtaques + "ataques"));
 
     }
 
+    private void personajeConAtaqueMasPoderoso() {
+        int maxDaño = personajes.stream()
+                .flatMap(p -> p.getAtaques().stream())
+                .mapToInt(Ataque::getDaño)
+                .max().orElse(0);
 
-    public void personajeConMasAtaques() throws DBException {
-        int numMaxAtaques = personajes.stream().mapToInt(p -> p.getAtaques().size())
-                .max().orElseThrow(() -> new DBException("No hay personajes"));
-
+        personajes.stream()
+                .filter(p -> p.getAtaques().stream().anyMatch(a -> a.getDaño() == maxDaño))
+                .forEach(p -> System.out.println(p.getNombre() + " tiene un ataque de daño " + maxDaño));
     }
 
     public void todosLosAtaquesOrdenadosNombre() {
-
+        personajes.stream()
+                .flatMap(p -> p.getAtaques().stream())
+                .distinct()
+                .sorted(Comparator.comparing(Ataque::getNombre))
+                .forEach(System.out::println);
     }
 
     public void todosLosAtaquesOrdenadosDamage() {
 
+        personajes.stream()
+                .flatMap(p -> p.getAtaques().stream())
+                .distinct()
+                .sorted(Comparator.comparing(Ataque::getDaño).reversed())
+                .forEach(System.out::println);
+
+
     }
 
     public Ataque ataqueMasDañino(Personaje p1, Personaje p2) throws DBException{
-
+        return p1.getAtaques().stream()
+                .filter(a -> a.getKiNecesario() <= p1.getKiActual())
+                .max(Comparator.comparingInt(Ataque::getDaño))
+                .orElseThrow(() -> new DBException(p1.getNombre() + " no tiene ataques disponibles o ki suficiente"));
     }
 
     public void atacar(Personaje p1, Personaje p2, String ataque) throws DBException {
+        if (p1.isMuerto() || p2.isMuerto()){
+            System.out.println("Un personaje muerto no puede atacar ni ser atacado.");
+            return;
+        }
 
+        List<Ataque> ataquesConNombre = p1.getAtaques().stream()
+                .filter(a -> a.getNombre().equalsIgnoreCase(ataque))
+                .toList();
+
+        if (ataquesConNombre.isEmpty()){
+            System.out.println("Error: " + p1.getNombre() + " no tiene el ataque " + ataque + " en su lista.");
+            return;
+        }
+
+        List<Ataque> ataquesPosibles = ataquesConNombre.stream()
+                .filter(a -> a.getKiNecesario() <= p1.getKiActual())
+                .toList();
+
+        if (ataquesPosibles.isEmpty()){
+            System.out.println("El personaje " + p1.getNombre() + " no tiene ki suficiente");
+            return;
+        }
+
+        Ataque elegido = ataquesPosibles.stream()
+                .max(Comparator.comparingInt(Ataque::getDaño))
+                .get();
+
+        // Aplicamos efectos del combate
+        p2.recibirDaño(elegido.getDaño());
+        p1.consumirKi(elegido.getKiNecesario());
+        p1.getAtaques().remove(elegido); // Eliminamos de la lista al consumirse (olvido)
+
+        System.out.println(p1.getNombre() + " lanza " + elegido.getNombre() + " contra " + p2.getNombre() + " y le ha hecho " + elegido.getDaño() + " de daño");
+
+        if (p2.isMuerto()) {
+            System.out.println(p2.getNombre() + " ha muerto :(");
+        } else {
+            System.out.println("Vida restante de " + p2.getNombre() + ": " + p2.getVidaActual());
+        }
     }
 
     public void eliminarAtaquesInferioresANivel(int nivel){
