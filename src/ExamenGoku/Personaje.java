@@ -128,10 +128,13 @@ public class Personaje {
         return Objects.hash(nombre, raza);
     }
 
-    public void recibirDaño(int cantidad){
-        this.vidaActual -= cantidad;
-        if (this.vidaActual < 0) {
-            this.vidaActual = 0;
+    public void recibirDaño(int daño){
+        if (!isMuerto()){
+            if (daño > vidaActual){
+                vidaActual = 0;
+            } else {
+                vidaActual = vidaActual - daño;
+            }
         }
     }
 

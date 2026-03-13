@@ -2,6 +2,7 @@ package ExamenGoku;
 
 import exceptions.DBException;
 
+import javax.print.DocFlavor;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -171,7 +172,7 @@ public class Juego {
         personajes.stream()
                 .flatMap(p -> p.getAtaques().stream())
                 .distinct()
-                .sorted(Comparator.comparing(Ataque::getNombre))
+                .sorted()
                 .forEach(System.out::println);
     }
 
@@ -180,16 +181,20 @@ public class Juego {
         personajes.stream()
                 .flatMap(p -> p.getAtaques().stream())
                 .distinct()
-                .sorted(Comparator.comparing(Ataque::getDaño).reversed())
+                .sorted(Comparator.comparing(Ataque::getDaño)) //Forma con el Comparator comparing
                 .forEach(System.out::println);
 
 
     }
 
     public Ataque ataqueMasDañino(Personaje p1, Personaje p2) throws DBException{
+        if (p1.isMuerto()){
+            throw new DBException("Esta muerto");
+        }
+
         return p1.getAtaques().stream()
                 .filter(a -> a.getKiNecesario() <= p1.getKiActual())
-                .max(Comparator.comparingInt(Ataque::getDaño))
+                .max((a1,a2) -> a2.getDaño() - a1.getDaño()) //Forma a mano
                 .orElseThrow(() -> new DBException(p1.getNombre() + " no tiene ataques disponibles o ki suficiente"));
     }
 
@@ -236,11 +241,35 @@ public class Juego {
     }
 
     public void eliminarAtaquesInferioresANivel(int nivel){
+        for (Personaje p : personajes){
+            Iterator<Ataque> ia = p.getAtaques().iterator();
+            while (ia.hasNext()){
+                Ataque a = ia.next();
+
+                if (a.getNivelDePerfeccion() < nivel){
+                    ia.remove();
+                }
+            }
+        }
+
+        /*
+
+        Otra forma de hacerlo
+        for (Personaje p : personajes){
+            p.getAtaques().removeIf(a -> a.getNivelDePerfeccion() < nivel);
+        }
+
+         */
+
 
     }
 
     public Map<TRaza, List<Personaje>> devuelveMapaRazas(){
-
+        Map<TRaza, List<Personaje>> mapaDeRaza = new HashMap<>();
+        for (TRaza raza : TRaza.values()){
+            mapaDeRaza.put(raza, personajes.stream().filter(p -> p.getRaza() == raza).toList());
+        }
+        return mapaDeRaza;
     }
 
 }

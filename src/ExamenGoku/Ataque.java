@@ -2,7 +2,7 @@ package ExamenGoku;
 
 import exceptions.DBException;
 
-public class Ataque {
+public class Ataque implements Comparable<Ataque> {
     private String nombre;
     private int kiNecesario;
     private int nivelDePerfeccion;
@@ -55,5 +55,10 @@ public class Ataque {
             throw new DBException("El daño debe ser mayor que 0");
         }
         this.daño = daño;
+    }
+
+    @Override
+    public int compareTo(Ataque o) {
+        return this.nombre.compareTo(o.nombre);
     }
 }
